@@ -1188,6 +1188,41 @@ def teste_sql():
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Vendas: {e}")
 
+def tratamento_txt():
+    arquivo = filedialog.askopenfilename(title="Selecione o arquivo")
+    abrir_arquivo = open(arquivo, 'r')
+    linhas = abrir_arquivo.readlines()
+    abrir_arquivo.close()
+    
+    root_texto = tk.Tk()
+    root_texto.title("Tratamento de TXT")
+
+    centralizar_janela(root_texto, 200, 100)
+
+    label = tk.Label(root_texto, text="Texto a ser procurado")
+    label.pack()
+
+    entry = tk.Entry(root_texto)
+    entry.pack()
+
+    button = tk.Button(root_texto, text="Enviar", command=root_texto.quit)
+    button.pack()
+    root_texto.mainloop()
+    texto_procurado = entry.get()
+    root_texto.destroy()
+
+    texto_modificado = []
+
+    arquivo2 = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")], title="Salvar Arquivo")
+
+    for linha in linhas:
+        if texto_procurado not in linha:
+            texto_modificado.append(linha)
+
+    salvar_arquivo = open(arquivo2, 'w')
+    salvar_arquivo.writelines(texto_modificado)
+    salvar_arquivo.close()
+
 # Configuração da interface Tkinter
 root = tk.Tk()
 root.title("Operações - American Pet")
@@ -1238,6 +1273,12 @@ financeiro_menu = tk.Menu(submenu, tearoff=0)
 financeiro_menu.add_command(label="Tratamento TXT", command=tratamento_txt)
 submenu.add_cascade(label="Financeiro", menu=financeiro_menu)
 
+# Submenu arquivos
+submenu2 = tk.Menu(submenu, tearoff=0)
+menu.add_cascade(label="Arquivos", menu=submenu2)
+submenu2.add_command(label="Tratamento TXT", command=tratamento_txt)
+
+# Submenu de Sobre
 submenu3 = tk.Menu(menu, tearoff=0)
 menu.add_cascade(label="Sobre", menu=submenu3)
 submenu3.add_command(label="Sobre", command=sobre)
