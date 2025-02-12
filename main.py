@@ -1,13 +1,10 @@
 from func import centralizar_janela, salvar_arquivo, sobre, atualizar_mensagem
 import tkinter as tk
-import requests
 from tkinter import messagebox, filedialog
 from tkcalendar import DateEntry
-import mysql.connector
 import pandas as pd
 from sqlalchemy import create_engine, text
 from PIL import Image, ImageTk
-import psycopg2
 from dotenv import load_dotenv
 import os
 
@@ -1250,7 +1247,7 @@ menu.add_command(label="Sair", command=root.quit)
 rodape = tk.Label(root, text="Tecnologia - American Pet", bd=1, relief=tk.SUNKEN, anchor=tk.W)
 rodape.pack(side=tk.BOTTOM, fill=tk.X)
 
-imagem = Image.open("C:/Operation/bg.png")
+imagem = Image.open("bg.png")
 imagem = imagem.resize((150, 100), Image.LANCZOS)
 imagem_tk = ImageTk.PhotoImage(imagem)
 
@@ -1260,7 +1257,7 @@ label_imagem.pack(expand=True, fill=tk.BOTH)
 label_progresso = tk.Label(root, text="Status")
 label_progresso.pack(pady=20)
 
-icone = Image.open("C:/Operation/bg.png")
+icone = Image.open("bg.png")
 icone_tk = ImageTk.PhotoImage(icone)
 root.iconphoto(True, icone_tk)
 
