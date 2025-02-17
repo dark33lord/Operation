@@ -21,11 +21,11 @@ def compras():
         centralizar_janela(root_data, 150, 200)
 
         tk.Label(root_data, text="Data Inicial").pack(pady=5)
-        date_entry_inicial = DateEntry(root_data, date_pattern='yyyy-mm-dd')
+        date_entry_inicial = DateEntry(root_data, date_pattern='yyyy-mm-dd', locale='pt_BR')
         date_entry_inicial.pack(pady=5)
 
         tk.Label(root_data, text="Data Final").pack(pady=5)
-        date_entry_final = DateEntry(root_data, date_pattern='yyyy-mm-dd')
+        date_entry_final = DateEntry(root_data, date_pattern='yyyy-mm-dd', locale='pt_BR')
         date_entry_final.pack(pady=5)
 
         def execucao():
@@ -137,7 +137,10 @@ def vendas():
                   e.empresa_nome,
                   di.produto_id;"""
             
-            df = pd.read_sql(query, conexao_sqlalchemy)
+            with conexao_sqlalchemy.connect() as conexao:
+                resultado = conexao.execute(text(query))
+                df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
             salvar_arquivo(df)
 
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
@@ -216,12 +219,14 @@ def pagmaquininhas():
                     AND (COALESCE(dc.flagcancelado,'0') ='0')
                 ORDER BY e.empresa_nome, dc.datalancamento;"""
             
-            df = pd.read_sql(query, conexao_sqlalchemy)
+            with conexao_sqlalchemy.connect() as conexao:
+                resultado = conexao.execute(text(query))
+                df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+            
             salvar_arquivo(df)
 
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)
-    
         root.mainloop()
         atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
@@ -278,18 +283,19 @@ def despesas():
                     (1 = 1)
                     AND COALESCE(t.flagcancelado, 0)= 0
                     AND COALESCE(t.flagexcluido, 0)= 0
-                    AND t.datavencimento BETWEEN '{data_inicial}' AND '{data_final}'
+                    AND t.datadocumento BETWEEN '{data_inicial}' AND '{data_final}'
                     AND t.planodeconta_id <> 'E6892FEC-DBEF-4704-99EE-462A0F687F1E'
                 ORDER BY
                     e.empresa_nome,
                     t.datavencimento;"""
+            with conexao_sqlalchemy.connect() as conexao:
+                resultado = conexao.execute(text(query))
+                df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
             
-            df = pd.read_sql(query, conexao_sqlalchemy)
             salvar_arquivo(df)
 
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)
-        
         
         root.mainloop()
         atualizar_mensagem(root, label_progresso, "Aguardando Operação")
@@ -359,13 +365,14 @@ def rma():
                 e.empresa_codigo,
                 d.dt_doc"""
             
-            df = pd.read_sql(query, conexao_sqlalchemy)
+            with conexao_sqlalchemy.connect() as conexao:
+                resultado = conexao.execute(text(query))
+                df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
             salvar_arquivo(df)
 
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
-        btn_obter_datas.pack(pady=20)
-        
-        
+        btn_obter_datas.pack(pady=20)       
         root.mainloop()
         atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
@@ -680,8 +687,11 @@ def cmv():
                         ORDER BY
                             e.empresa_codigo;
                             """
+                    
+                    with conexao_sqlalchemy.connect() as conexao:
+                        resultado = conexao.execute(text(query))
+                        df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
             
-                    df = pd.read_sql(query, conexao_sqlalchemy)
                     salvar_arquivo(df)
 
                 except Exception as e:
@@ -752,7 +762,10 @@ def vendas_delivery():
                     ORDER BY 
                         e.empresa_codigo, m.numeromovimento, m.`data`;
                     """
-            df = pd.read_sql(query, conexao_sqlalchemy)
+            with conexao_sqlalchemy.connect() as conexao:
+                resultado = conexao.execute(text(query))
+                df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
             salvar_arquivo(df)
 
         btn_obter_datas = tk.Button(root, text="Enviar", command=execucao)
@@ -789,7 +802,10 @@ def rma_fiscal():
                     AND dn.codigoretorno = '100'
                 ORDER BY dn.dt_doc
                 """
-        df = pd.read_sql(query, conexao_sqlalchemy)
+        with conexao_sqlalchemy.connect() as conexao:
+            resultado = conexao.execute(text(query))
+            df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
         salvar_arquivo(df)
 
         root.mainloop()
@@ -830,7 +846,10 @@ def clientes_delivery():
 
                 ORDER BY p.nome, p.codigo;
                 """
-        df = pd.read_sql(query, conexao_sqlalchemy)
+        with conexao_sqlalchemy.connect() as conexao:
+            resultado = conexao.execute(text(query))
+            df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
         salvar_arquivo(df)
 
         root.mainloop()
@@ -951,7 +970,10 @@ def vendas_fornecedor():
                   di.produto_id;"""
             
             
-            df = pd.read_sql(query, conexao_sqlalchemy)
+            with conexao_sqlalchemy.connect() as conexao:
+                resultado = conexao.execute(text(query))
+                df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
             salvar_arquivo(df)
             atualizar_mensagem(root, label_progresso, "Aguardando Operação")
         
@@ -1027,12 +1049,14 @@ def vendas_grandfood():
                 ORDER BY
                   e.empresa_nome,
                   di.produto_id;"""
-            df = pd.read_sql(query, conexao_sqlalchemy)
+            with conexao_sqlalchemy.connect() as conexao:
+                resultado = conexao.execute(text(query))
+                df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
             salvar_arquivo(df)
 
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)
-        contador = 0
         root.mainloop()
         atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
@@ -1064,99 +1088,7 @@ def teste_sql():
             root_data.destroy()
             atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
-            SELECT
-                m.data,
-                emp.empresa_codigo,
-                emp.empresa_nome,
-                emp.empresa_id,
-                p.produto_id,
-                c.categoria_id,
-                c.codigo categoria_codigo,
-                CAST(COALESCE(c.hierarquia_nome, c.nome) AS CHAR(250)) categoria_nome,
-                mr.nome marca_nome,
-                pf.cnpj fornecedor_cnpj,
-                p.codigo produto_codigo,
-                p.nome produto_nome,
-                p.tpreco01,
-                testoque01,
-                tcusto01,
-                pf.codigo fornecedor_codigo,
-                pf.nome fornecedor_nome,
-                p.pesobruto,
-                p.pesoliquido,
-                p.altura,
-                p.largura,
-                p.comprimento,
-                p.quantidadeembalagem,
-                SUM(mp.quantidadecomercial) quantidadetotal,
-                SUM(mp.quantidadecomercial)* p.pesobruto pesobruto,
-                SUM(mp.quantidadecomercial)* p.pesoliquido pesoliquido,
-                SUM(COALESCE(mp.valortotalproduto, 0)) valortotalproduto,
-                SUM(mp.valortotalcmv) valortotalcmv,
-                SUM(mp.valortotal) valortotal,
-                SUM(mp.valortotal - mp.valortotalcmv) lucrobruto,
-                ((SUM(mp.valortotal) - SUM(mp.valortotalcmv))/ SUM(mp.valortotalcmv))* 100.00 markup,
-                ((SUM(mp.valortotal) - SUM(mp.valortotalcmv))/ SUM(mp.valortotal))* 100.00 margem,
-                SUM(COALESCE(mp.valortotal, 0) + COALESCE(mp.valorcrescimorateio, 0)- COALESCE(mp.valordescontorateio, 0)) valortotal_vds_liquida,
-                SUM(COALESCE(mp.valortotal, 0) + COALESCE(mp.valorcrescimorateio, 0)+ COALESCE(mp.valordescontorateio, 0)) vendaBruta,
-                SUM(COALESCE(mp.valoracrescimo, 0)) valoracrescimo,
-                SUM(COALESCE(mp.valoracrescimoitem, 0)) valoracrescimoitem,
-                SUM(COALESCE(mp.valorcrescimorateio, 0)) valorcrescimorateio,
-                SUM(COALESCE(mp.valordesconto, 0)) valordesconto,
-                SUM(COALESCE(mp.valordescontoitem, 0)) valordescontoitem,
-                SUM(COALESCE(mp.valordescontorateio, 0)) valordescontorateio,
-                SUM(COALESCE(mp.valortotal, 0) + COALESCE(mp.valorcrescimorateio, 0) - COALESCE(mp.valortotalcmv, 0) - COALESCE(mp.valoracrescimo, 0) - COALESCE(mp.valoracrescimoitem, 0) - COALESCE(mp.valorcrescimorateio, 0) - COALESCE(mp.valordesconto, 0) - COALESCE(mp.valordescontoitem, 0) - COALESCE(mp.valordescontorateio, 0)) Lucro_Bruto_SemDesc_SemAcres,
-                SUM(COALESCE(mp.valortotal, 0.00) - (COALESCE(mp.valordesconto, 0.00) + COALESCE(mp.valoroutrasdespesas, 0.00))) valortotalfinal
-            FROM
-                ideiaerp.movimentosaida m
-            INNER JOIN ideiaerp.movimentosaidaproduto mp ON
-                (m.movimentosaida_id = mp.movimentosaida_id)
-            INNER JOIN ideiaerp.empresa emp ON
-                (emp.empresa_id = m.empresa_id)
-            INNER JOIN ideiaerp.produto p ON
-                (p.produto_id = mp.produto_id)
-            LEFT JOIN ideiaerp.categoria c ON
-                (c.categoria_id = p.categoria_id)
-            LEFT JOIN ideiaerp.unidadenegocio un ON
-                (p.unidadenegocio_id = un.unidadenegocio_id)
-            LEFT JOIN ideiaerp.pessoa pes ON
-                (pes.pessoa_id = m.pessoa_id)
-            LEFT JOIN ideiaerp.pessoa pf ON
-                (pf.pessoa_id = p.fornecedor_pessoa_id)
-            LEFT JOIN ideiaerp.naturezaoperacao n ON
-                (n.naturezaoperacao_id = m.naturezaoperacao_id)
-            LEFT JOIN ideiaerp.marca mr ON
-                (mr.marca_id = p.marca_id)
-            WHERE
-                (1 = 1)
-                AND COALESCE(mp.flagcancelado, '0') = '0'
-                AND (COALESCE(m.flagexcluido, '0')= '0')
-                AND (mp.promocaorelampago_id IS NOT NULL)
-                AND COALESCE(m.flagcancelado, '0') = '0'
-                AND (COALESCE(m.flagtipooperacao, '1') = '1')
-                AND m.data >= '{data_inicial}'
-                AND m.data <= '{data_final}'
-            GROUP BY
-                emp.empresa_id,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14,
-                15,
-                p.pesobruto,
-                p.pesoliquido,
-                p.altura,
-                p.largura,
-                p.comprimento,
-                p.quantidadeembalagem
-            ORDER BY
-                p.nome"""
+            SELECT"""
             
             df = pd.read_sql(query, conexao_sqlalchemy)
             salvar_arquivo(df)

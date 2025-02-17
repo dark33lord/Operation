@@ -30,7 +30,7 @@ def salvar_arquivo(df):
             print(f"Erro ao salvar o arquivo: {e}")
 
 def sobre():
-    messagebox.showinfo("Sobre", "Versão 1.6\nPowered by Marcelo Costa")
+    messagebox.showinfo("Sobre", "Versão 1.7\nPowered by Marcelo Costa")
 
 def atualizar_mensagem(root, label_progresso, mensagem):
     label_progresso.config(text=mensagem)
