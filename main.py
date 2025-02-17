@@ -100,7 +100,7 @@ def vendas():
             data_final = date_entry_final.get()
             root_data.quit()
             root_data.destroy()
-            atualizar_mensagem("Gerando Arquivo...")
+            atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
             SELECT
                   e.empresa_nome,
@@ -143,7 +143,7 @@ def vendas():
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)
         root.mainloop()
-        atualizar_mensagem("Aguardando Operação")
+        atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Vendas: {e}")
@@ -169,7 +169,7 @@ def pagmaquininhas():
             data_final = date_entry_final.get()
             root_data.quit()
             root_data.destroy()
-            atualizar_mensagem("Gerando Arquivo...")
+            atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
                 SELECT
                     dc.documentoconvenio_id,
@@ -223,7 +223,7 @@ def pagmaquininhas():
         btn_obter_datas.pack(pady=20)
     
         root.mainloop()
-        atualizar_mensagem("Aguardando Operação")
+        atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Pagamento de Maquininhas: {e}")
@@ -249,7 +249,7 @@ def despesas():
             data_final = date_entry_final.get()
             root_data.quit()
             root_data.destroy()
-            atualizar_mensagem("Gerando Arquivo...")
+            atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
                 SELECT
                     e.empresa_nome AS 'Filial',
@@ -292,7 +292,7 @@ def despesas():
         
         
         root.mainloop()
-        atualizar_mensagem("Aguardando Operação")
+        atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Despesas: {e}")
@@ -318,7 +318,7 @@ def rma():
             data_final = date_entry_final.get()
             root_data.quit()
             root_data.destroy()
-            atualizar_mensagem("Gerando Arquivo...")
+            atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
             SELECT
                 e.empresa_codigo,
@@ -367,7 +367,7 @@ def rma():
         
         
         root.mainloop()
-        atualizar_mensagem("Aguardando Operação")
+        atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de RMA: {e}")
@@ -396,7 +396,7 @@ def cmv():
 
             with conexao_sqlalchemy.connect() as connection:
                 #Passo 1 de 14
-                atualizar_mensagem("Passo 1 de 14: Excluindo tabela temporária 1...")
+                atualizar_mensagem(root, label_progresso, "Passo 1 de 14: Excluindo tabela temporária 1...")
                 try:
                     drop_table_query = text("DROP TEMPORARY TABLE IF EXISTS ideiaerp.tmp_produto_ultima_compra")
                     connection.execute(drop_table_query)
@@ -405,7 +405,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 1: {e}")
 
                 #Passo 2 de 14
-                atualizar_mensagem("Passo 2 de 14: Criando tabela temporária 1...") 
+                atualizar_mensagem(root, label_progresso, "Passo 2 de 14: Criando tabela temporária 1...") 
                 try:
                     create_table_query = text(f"""
                                             CREATE TEMPORARY TABLE ideiaerp.tmp_produto_ultima_compra AS (
@@ -430,7 +430,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 2: {e}")
 
                 #Passo 3 de 14
-                atualizar_mensagem("Passo 3 de 14: Alterando chave primária tabela temporária 1...") 
+                atualizar_mensagem(root, label_progresso, "Passo 3 de 14: Alterando chave primária tabela temporária 1...") 
                 try:
                     alter_table_query = text("ALTER TABLE ideiaerp.tmp_produto_ultima_compra ADD PRIMARY KEY (produto_id, DATA)")
                     connection.execute(alter_table_query)
@@ -439,7 +439,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 3: {e}")
 
                 #Passo 4 de 14
-                atualizar_mensagem("Passo 4 de 14: Excluindo tabela temporária 2...") 
+                atualizar_mensagem(root, label_progresso, "Passo 4 de 14: Excluindo tabela temporária 2...") 
                 try:
                     drop_table_query = text("DROP TEMPORARY TABLE IF EXISTS ideiaerp.tmp_ultimacompra")
                     connection.execute(drop_table_query)
@@ -448,7 +448,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 4: {e}")
 
                 #Passo 5 de 14
-                atualizar_mensagem("Passo 5 de 14: Criando tabela temporária 2...") 
+                atualizar_mensagem(root, label_progresso, "Passo 5 de 14: Criando tabela temporária 2...") 
                 try:
                     create_table_query = text("""
                           CREATE TEMPORARY TABLE ideiaerp.tmp_ultimacompra AS (
@@ -499,7 +499,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 5: {e}")
 
                 #Passo 6 de 14
-                atualizar_mensagem("Passo 6 de 14: Alterando chave primária tabela temporária 2...") 
+                atualizar_mensagem(root, label_progresso, "Passo 6 de 14: Alterando chave primária tabela temporária 2...") 
                 try:
                     alter_table_query = text("ALTER TABLE ideiaerp.tmp_ultimacompra ADD PRIMARY KEY (produto_id);")
                     connection.execute(alter_table_query)
@@ -508,7 +508,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 6: {e}")
 
                 #Passo 7 de 14
-                atualizar_mensagem("Passo 7 de 14: Excluindo tabela temporária 3...")
+                atualizar_mensagem(root, label_progresso, "Passo 7 de 14: Excluindo tabela temporária 3...")
                 try:
                     drop_table_query = text("DROP TEMPORARY TABLE IF EXISTS ideiaerp.tmp_ultimacompra_detalhes")
                     connection.execute(drop_table_query)
@@ -517,7 +517,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 7: {e}")
 
                 #Passo 8 de 14
-                atualizar_mensagem("Passo 8 de 14: Criando tabela temporária 3...") 
+                atualizar_mensagem(root, label_progresso, "Passo 8 de 14: Criando tabela temporária 3...") 
                 try:
                     create_table_query = text("""
                                             CREATE TEMPORARY TABLE ideiaerp.tmp_ultimacompra_detalhes AS (
@@ -561,7 +561,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 8: {e}") 
 
                 #Passo 9 de 14
-                atualizar_mensagem("Passo 9 de 14: Alterando chave primária tabela temporária 3...") 
+                atualizar_mensagem(root, label_progresso, "Passo 9 de 14: Alterando chave primária tabela temporária 3...") 
                 try:
                     alter_table_query = text("ALTER TABLE ideiaerp.tmp_ultimacompra_detalhes ADD PRIMARY KEY (produto_id);")
                     connection.execute(alter_table_query)
@@ -570,7 +570,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 9: {e}")
 
                 #Passo 10 de 14
-                atualizar_mensagem("Passo 10 de 14: Excluindo tabela temporária 4...")
+                atualizar_mensagem(root, label_progresso, "Passo 10 de 14: Excluindo tabela temporária 4...")
                 try:
                     drop_table_query = text("DROP TEMPORARY TABLE IF EXISTS ideiaerp.tmp_bi_custo")
                     connection.execute(drop_table_query)
@@ -579,7 +579,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 10: {e}")
 
                 #Passo 11 de 14
-                atualizar_mensagem("Passo 11 de 14: Criando tabela temporária 4...") 
+                atualizar_mensagem(root, label_progresso, "Passo 11 de 14: Criando tabela temporária 4...") 
                 try:
                     create_table_query = text("""
                           CREATE TEMPORARY TABLE ideiaerp.tmp_bi_custo AS (
@@ -597,7 +597,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 11: {e}")
 
                 #Passo 12 de 14
-                atualizar_mensagem("Passo 12 de 14: Alterando chave primária tabela temporária 4...") 
+                atualizar_mensagem(root, label_progresso, "Passo 12 de 14: Alterando chave primária tabela temporária 4...") 
                 try:
                     alter_table_query = text("ALTER TABLE ideiaerp.tmp_bi_custo ADD PRIMARY KEY(produto_id);")
                     connection.execute(alter_table_query)
@@ -606,7 +606,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 12: {e}") 
 
                 #Passo 13 de 14
-                atualizar_mensagem("Passo 13 de 14: Excluindo tabela temporária 5...")
+                atualizar_mensagem(root, label_progresso, "Passo 13 de 14: Excluindo tabela temporária 5...")
                 try:
                     drop_table_query = text("DROP TABLE IF EXISTS ideiaerp.tmp_cmv_resultfinal")
                     connection.execute(drop_table_query)
@@ -615,7 +615,7 @@ def cmv():
                     messagebox.showerror("Erro", f"Falha no passo 13: {e}")
 
                 #Passo 14 de 14
-                atualizar_mensagem("Passo 14 de 14: Criando tabela temporária 5...") 
+                atualizar_mensagem(root, label_progresso, "Passo 14 de 14: Criando tabela temporária 5...") 
                 try:
                     create_table_query = text(f"""
                                             CREATE TABLE ideiaerp.tmp_cmv_resultfinal AS (
@@ -687,7 +687,7 @@ def cmv():
                 except Exception as e:
                     messagebox.showerror("Erro", f"Falha ao exportar o arquivo: {e}")
 
-                atualizar_mensagem("Processo concluído com sucesso!")
+                atualizar_mensagem(root, label_progresso, "Processo concluído com sucesso!")
 
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)
@@ -695,7 +695,7 @@ def cmv():
         
         
         root.mainloop()
-        atualizar_mensagem("Aguardando Operação")
+        atualizar_mensagem(root, label_progresso, "Aguardando Operação")
         
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de RMA: {e}")
@@ -721,7 +721,7 @@ def vendas_delivery():
             data_final = date_entry_final.get()
             root.quit()
             root.destroy()
-            atualizar_mensagem("Gerando Arquivo...")
+            atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
                     SELECT 
                         e.empresa_codigo,
@@ -758,7 +758,7 @@ def vendas_delivery():
         btn_obter_datas = tk.Button(root, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)
         root.mainloop()
-        atualizar_mensagem("Aguardando...")
+        atualizar_mensagem(root, label_progresso, "Aguardando...")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Vendas Delivery: {e}")
@@ -842,11 +842,8 @@ def clientes_delivery():
 
 def lojas_dados():
 
-    atualizar_mensagem("Carregando...")
-
     try:
-        atualizar_mensagem("Gerando Arquivo...")
-
+        atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
         query = f"""
                 SELECT 
                     b.codigo,
@@ -876,20 +873,22 @@ def lojas_dados():
                 ORDER BY 
                     b.codigo
                 """
-        df = pd.read_sql(query, conexao_sqlalchemy)
+        with conexao_sqlalchemy.connect() as conn:
+            resultado = conn.execute(text(query))
+            df = pd.DataFrame(resultado.fetchall(), columns=resultado.keys())
+
         salvar_arquivo(df)
 
         root.mainloop()
-        atualizar_mensagem("Aguardando...")
+        atualizar_mensagem(root, label_progresso, "Aguardando...")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Lojas dados: {e}")
 
-    
 def vendas_fornecedor():
     
     try:
-        atualizar_mensagem("Gerando Arquivo...")
+        atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
 
          # Configuração da interface Tkinter para seleção de datas
         root_data = tk.Tk()
@@ -954,7 +953,7 @@ def vendas_fornecedor():
             
             df = pd.read_sql(query, conexao_sqlalchemy)
             salvar_arquivo(df)
-            atualizar_mensagem("Aguardando Operação")
+            atualizar_mensagem(root, label_progresso, "Aguardando Operação")
         
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)
@@ -962,24 +961,6 @@ def vendas_fornecedor():
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Vendas fornecedor: {e}")
-
-def tratamento_txt():
-    arquivo = filedialog.askopenfilename(title="Selecione o arquivo")
-    abrir_arquivo = open(arquivo, 'r')
-    linhas = abrir_arquivo.readlines()
-    abrir_arquivo.close()
-
-    texto_modificado = []
-
-    arquivo2 = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")], title="Salvar Arquivo")
-
-    for linha in linhas:
-        if 'C173' not in linha:
-            texto_modificado.append(linha)
-
-    salvar_arquivo = open(arquivo2, 'w')
-    salvar_arquivo.writelines(texto_modificado)
-    salvar_arquivo.close()    
 
 def vendas_grandfood():
     try:
@@ -1003,7 +984,7 @@ def vendas_grandfood():
             data_final = date_entry_final.get()
             root_data.quit()
             root_data.destroy()
-            atualizar_mensagem("Gerando Arquivo...")
+            atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
             SELECT
                   e.empresa_nome,
@@ -1053,7 +1034,7 @@ def vendas_grandfood():
         btn_obter_datas.pack(pady=20)
         contador = 0
         root.mainloop()
-        atualizar_mensagem("Aguardando Operação")
+        atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Vendas: {e}")
@@ -1081,7 +1062,7 @@ def teste_sql():
             data_final = date_entry_final.get()
             root_data.quit()
             root_data.destroy()
-            atualizar_mensagem("Gerando Arquivo...")
+            atualizar_mensagem(root, label_progresso, "Gerando Arquivo...")
             query = f"""
             SELECT
                 m.data,
@@ -1183,12 +1164,14 @@ def teste_sql():
         btn_obter_datas = tk.Button(root_data, text="Enviar", command=execucao)
         btn_obter_datas.pack(pady=20)   
         root.mainloop()
-        atualizar_mensagem("Aguardando Operação")
+        atualizar_mensagem(root, label_progresso, "Aguardando Operação")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro na operação de Vendas: {e}")
 
 def tratamento_txt():
+
+    atualizar_mensagem(root, label_progresso, "Carregando arquivo...")
     arquivo = filedialog.askopenfilename(title="Selecione o arquivo")
     abrir_arquivo = open(arquivo, 'r')
     linhas = abrir_arquivo.readlines()
@@ -1219,6 +1202,7 @@ def tratamento_txt():
         if texto_procurado not in linha:
             texto_modificado.append(linha)
 
+    atualizar_mensagem(root, label_progresso, "Aguardando Operação...")
     salvar_arquivo = open(arquivo2, 'w')
     salvar_arquivo.writelines(texto_modificado)
     salvar_arquivo.close()
